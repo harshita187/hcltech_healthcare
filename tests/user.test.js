@@ -12,7 +12,9 @@ const createTestUser = async () => {
   const res = await request(app).post('/api/auth/register').send({
     name: 'Profile User',
     email: 'profile@example.com',
-    password: 'password123'
+    password: 'password123',
+    age: 30,
+    bloodGroup: 'O+'
   });
   return res.body.data.token;
 };
@@ -22,27 +24,29 @@ describe('User Profile API', () => {
     token = await createTestUser();
   });
 
-  it('should get user profile', async () => {
+  it('should get user profile details', async () => {
     const res = await request(app)
       .get('/api/users/profile')
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.data.name).toBe('Profile User');
-    expect(res.body.data).not.toHaveProperty('password'); // Security check
+    expect(res.body.data.bloodGroup).toBe('O+');
+    expect(res.body.data).not.toHaveProperty('password'); 
   });
 
-  it('should update user details (age and blood group)', async () => {
+  it('should update user details via API', async () => {
+    // Even if frontend is read-only, backend API supports updates
     const res = await request(app)
       .put('/api/users/profile')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        age: 30,
-        bloodGroup: 'O+'
+        weight: 80,
+        height: 180
       });
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.data.age).toBe(30);
-    expect(res.body.data.bloodGroup).toBe('O+');
+    expect(res.body.data.weight).toBe(80);
+    expect(res.body.data.height).toBe(180);
   });
 });

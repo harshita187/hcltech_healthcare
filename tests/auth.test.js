@@ -9,19 +9,24 @@ afterAll(async () => await db.close());
 
 describe('Auth API', () => {
   
-  it('should register a new user successfully', async () => {
+  it('should register a new user with full health profile', async () => {
     const res = await request(app)
       .post('/api/auth/register')
       .send({
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
+        age: 25,
+        gender: 'Male',
+        bloodGroup: 'O+',
+        height: 175,
+        weight: 70
       });
     
     expect(res.statusCode).toEqual(201);
     expect(res.body.success).toBe(true);
     expect(res.body.data).toHaveProperty('token');
-    expect(res.body.data.email).toBe('test@example.com');
+    expect(res.body.data.name).toBe('Test User');
   });
 
   it('should not register user with existing email', async () => {
@@ -39,7 +44,7 @@ describe('Auth API', () => {
       password: '456'
     });
 
-    expect(res.statusCode).toEqual(400); // Or 500 depending on your error handler specific logic, but 400 is better
+    expect(res.statusCode).toEqual(400); 
     expect(res.body.success).toBe(false);
   });
 
