@@ -31,9 +31,8 @@ jobs:
     - name: Run Test Suite
       run: npm test
       env:
-        # 🚨 IMPORTANT: Add 'TEST_MONGO_URI' to your GitHub Repository Secrets
-        # This should point to your Atlas Test Database (e.g., wellness_test_db)
-        MONGO_URI: mongodb+srv://instascraperpro:Yu2PufnGKGFcCa1A@jeehubbackend.sazjr.mongodb.net/?retryWrites=true&w=majority&appName=jeehubBackend
+       
+        MONGO_URI: mongodb+srv://instascraperpro:Yu2PufnGKGFcCa1A@jeehubbackend.sazjr.mongodb.net/wellness_portal_test?retryWrites=true&w=majority&appName=jeehubBackend
         JWT_SECRET: test_secret_do_not_use_in_prod
         PORT: 8080
         NODE_ENV: test

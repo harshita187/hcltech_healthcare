@@ -58,3 +58,4 @@ describe('Wellness API', () => {
     expect(res.body.data.activity.caloriesBurned).toBe(300);
   });
 });
+
