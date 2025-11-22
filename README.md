@@ -1,92 +1,99 @@
-# 🚀 Execution Plan & Timeline: 5-Hour MVP
-**Project:** Healthcare Wellness Portal
-**Stack:** React + Node/Express + MongoDB + GCP/Vercel
+# Wellness & Preventive Care Portal (MVP)
+
+## 🏥 Brief Description of MVP
+We are building a **Healthcare Wellness and Preventive Care Portal**. The main goal of this project is to shift the focus from "treating sickness" to "maintaining health." 
+
+For this 5-hour MVP, we are creating a secure platform where patients can log in, view their personalized health goals (like daily steps or water intake), and see upcoming preventive checkup reminders. We are prioritizing **data privacy**, **ease of use**, and **responsive design** so it works well on all devices.
 
 ---
 
-## 🎯 Priority Matrix (What we build first)
+## 🛠️ Our Tech Stack
+We are using a standard MERN stack with a focus on speed and security.
 
-We are using the **MoSCoW** method to ensure we finish on time.
+**Frontend:**
+* **React.js:** For building the user interface.
+* **Tailwind CSS:** For fast, responsive styling.
+* **Axios:** To connect the frontend to our backend.
 
-### 🔴 P0: Critical (Must Have) - *If this breaks, we fail.*
-1.  **Environment Setup:** Git repo, Database connection, Basic Express server.
-2.  **Authentication:** Register/Login with JWT & Role separation (Patient vs. Provider).
-3.  **Schema Design:** User, Profile, and Goal models in MongoDB.
-4.  **Patient Dashboard:** Ability to input "Steps/Water" and see it saved.
-5.  **Privacy Compliance:** The "Data Consent" checkbox on signup + internal logging of who accessed data.
+**Backend:**
+* **Node.js & Express.js:** To handle API requests and server logic.
+* **Security Libraries:** `bcrypt` (for password hashing), `jsonwebtoken` (for secure login sessions), `helmet` (for header security).
 
-### 🟡 P1: Core Features (Should Have) - *The business logic.*
-1.  **Provider Dashboard:** Read-only view for doctors to see patient compliance.
-2.  **Profile Management:** Editing allergies/meds.
-3.  **Deployment:** Getting the backend on GCP and Frontend on Vercel.
+**Database:**
+* **MongoDB:** To store user profiles and health records flexibly.
 
-### 🟢 P2: Polish (Nice to Have) - *If we have time left.*
-1.  **CI/CD:** GitHub Actions (Basic test workflow).
-2.  **Fancy UI:** Charts/Graphs for the steps (use simple text stats first).
-3.  **Static Pages:** "Public Health Info" page.
+**Deployment (Planned):**
+* **Backend:** Google Cloud Platform (GCP) Cloud Run.
+* **Frontend:** Vercel.
 
 ---
 
-## ⏳ Hourly Timeline (The 5-Hour Sprint)
+## 🧩 System Architecture & Data Flow
+This is the high-level design of how our components talk to each other:
 
-### 🕐 Hour 1: Architecture & "The Skeleton"
-**Goal:** A running backend connected to DB and a basic Frontend scaffold.
-* **Backend:** * Initialize `npm`, install dependencies (express, mongoose, dotenv, cors).
-    * Connect to MongoDB Atlas.
-    * Set up **Winston Logger** (Critical for the "Security Logging" requirement).
-* **Frontend:** * `npm create vite@latest` (React).
-    * Install Tailwind CSS (for speed) & React Router.
-* **DevOps:** Create the GitHub Repository and push the skeleton.
+1.  **Client Layer (React):** The user interacts with the UI. Input is validated here first (e.g., making sure email format is correct).
+2.  **API Layer (Express/Node):** Receives requests. Middleware checks if the user is authorized (logged in).
+3.  **Service Layer:** Process the logic (e.g., calculating if a health goal is met).
+4.  **Data Layer (MongoDB):** securely retrieves or saves the data.
 
-### 🕑 Hour 2: Authentication & Roles (The Hardest Part)
-**Goal:** Users can sign up as "Patient" or "Provider" and get a Token.
-* **Backend:** * Create `User` Model (`name`, `email`, `password`, `role`, `consent_agreed`).
-    * Implement `POST /register` (Hash password!).
-    * Implement `POST /login` (Issue JWT).
-    * **Security Check:** Ensure the "Consent Checkbox" is validated on the backend.
-* **Frontend:** * Build Login/Register forms.
-    * Add the "I agree to data usage" checkbox (HIPAA requirement).
-
-### 🕒 Hour 3: Patient Features (Data Entry)
-**Goal:** A patient can log in and track their health.
-* **Backend:** * Create `WellnessLog` Model (`steps`, `water`, `date`).
-    * Create API: `POST /api/log` (Add entry) and `GET /api/log` (View history).
-* **Frontend:** * Create **Patient Dashboard**.
-    * Add simple input fields: "How many steps today?" "Water intake?".
-    * Display a static "Health Tip of the Day" (Hardcode an array of tips to randomise).
-
-### 🕓 Hour 4: Provider View & Profile
-**Goal:** The Doctor sees the Patient's data.
-* **Backend:** * Create API: `GET /api/patients` (Protected route: Only 'Provider' role can access).
-    * **Audit Log:** When this endpoint is hit, log: *"Provider X accessed Patient list at [Time]"* (Judges will love this detail).
-* **Frontend:** * Create **Provider Dashboard**.
-    * Fetch list of patients. Show a red/green tag based on if they logged data today.
-    * Build "Edit Profile" page for Patients (Allergies/Meds).
-
-### 🕔 Hour 5: Deployment & CI/CD
-**Goal:** Go Live.
-* **Deployment:**
-    * **Frontend:** Drag and drop folder to Vercel Dashboard (easiest way).
-    * **Backend:** Deploy to Google Cloud Run (or Render if GCP config takes too long).
-* **CI/CD:** Add the `.github/workflows/node.js.yml` file to run a simple test on push.
-* **Final QA:** Check if the README is updated and the app doesn't crash on wrong passwords.
+**Data Flow Model:**
+`User` ⮕ `React UI` ⮕ `Secure API Endpoint` ⮕ `Controller Logic` ⮕ `Database`
 
 ---
 
-## 🛠 Technical Implementation Details
+## 🚀 Features to Implement
+We are focusing on these core features to meet the 5-hour deadline:
 
-### 1. Security First (Because it's Healthcare)
-* **Middleware:** We will create a `verifyToken` middleware.
-* **Role Check:** We will create a `requireRole('provider')` middleware.
-* **Logging:** Use `winston` to create a file `access.log`. 
-    * *Code Logic:* Inside the API controller, if a doctor requests patient data -> `logger.info('Data accessed by Provider ID: 123')`.
+### 1. Authentication & Security (High Priority)
+* User Registration and Login.
+* Password hashing (we never store raw passwords).
+* JWT Tokens to keep the session secure.
 
-### 2. Folder Structure for Speed
-Keep it flat and simple to avoid confusion.
-```text
-/src
-  /controllers (Auth, Patient, Provider)
-  /models (User, Log)
-  /routes (The API endpoints)
-  /utils (Logger configuration)
-  server.js (Main entry point)
+### 2. Patient Profile Management
+* Ability to update basic details (Age, Blood Group, History).
+* Simple dashboard view.
+
+### 3. Wellness Dashboard (The Core Feature)
+* **Preventive Goals:** A checklist of daily health tasks (e.g., "Exercise for 30 mins").
+* **Checkup Reminders:** A section showing when the next doctor visit is due.
+
+### 4. Responsive UI
+* A clean interface that looks good on mobile and desktop.
+
+---
+
+## ⏱️ Project Implementation Timeline (5 Hours)
+
+**Hour 1: Design & Setup**
+* Finalize database schema (User, Goals, Appointments).
+* Setup Project Repo (Frontend + Backend).
+* Connect to MongoDB Atlas.
+
+**Hour 2: Backend Core**
+* Setup Express server.
+* Build Auth APIs (Signup/Login).
+* Build User Profile APIs (Get/Update data).
+
+**Hour 3: Frontend Setup & Auth**
+* Setup React Router.
+* Create Login/Signup screens.
+* Connect Frontend to Backend Auth.
+
+**Hour 4: Dashboard & Features**
+* Build the Main Dashboard component.
+* Display Health Goals and Checkups dynamically.
+* Ensure the UI is responsive.
+
+**Hour 5: Testing, Polish & Deployment**
+* Fix bugs.
+* Deploy Backend to GCP.
+* Deploy Frontend to Vercel.
+* Final run-through of the user flow.
+
+---
+
+## 🔒 Security & Compliance Note
+Since this is a healthcare app, we are adhering to basic best practices:
+1.  **Data Privacy:** All sensitive user data is isolated.
+2.  **Encryption:** Passwords are hashed using bcrypt.
+3.  **Sanitization:** Inputs are checked to prevent injection attacks.
